@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Add User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container my-5">
+    <h2 class="mb-5">New User</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <form action="#" th:action="@{/adduser}" th:object="${user}" method="post">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="email" class="col-form-label">Email</label>
+                        <input type="text" th:field="*{email}" class="form-control" id="email"
+                               placeholder="Email">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email" class="col-form-label">Country</label>
+                        <input type="text" th:field="*{country}" class="form-control" id="country"
+                               placeholder="Country">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email" class="col-form-label">Age</label>
+                        <input type="number" th:field="*{age}" class="form-control" id="age"
+                               placeholder="Age">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mt-5">
+                        <input type="submit" class="btn btn-primary" value="Add User">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
