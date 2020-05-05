@@ -3,30 +3,43 @@ package com.accenture.bootcamp.thymeleaf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 import javax.validation.Valid;
 
+import static org.apache.logging.log4j.util.Strings.isBlank;
+
 @Controller
-public class UserController {
+class UserController {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("users", null);
+    public String index(@RequestParam(required = false) String email,
+                        Model model) {
+        List<User> users;
+        if (isBlank(email)) {
+            users = userRepository.findAll();
+        } else {
+            users = userRepository.findByEmailContaining(email);
+        }
+        model.addAttribute("users", users);
         return "index";
     }
 
     @GetMapping("/signup")
-    public String showSignUpForm(User user) {
+    public String signUpForm(User user) {
         return "add-user";
     }
 
@@ -38,7 +51,7 @@ public class UserController {
     }
 
     @GetMapping("/edit/{id}")
-    public String showUpdateForm(@PathVariable("id") Long id, Model model) {
+    public String updateForm(@PathVariable("id") Long id, Model model) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         model.addAttribute("user", user);
@@ -48,7 +61,11 @@ public class UserController {
     @PostMapping("/update/{id}")
     public String updateUser(@PathVariable("id") Long id,
                              @Valid User user,
+                             BindingResult bindingResult,
                              Model model) {
+        if(bindingResult.hasErrors()) {
+            return "update-user";
+        }
         userRepository.save(user);
         model.addAttribute("users", userRepository.findAll());
         return "index";
